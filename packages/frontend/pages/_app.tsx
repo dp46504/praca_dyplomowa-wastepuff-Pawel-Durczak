@@ -1,8 +1,20 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+import { useState, useEffect } from 'react';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  const [appReady, setAppReady] = useState(false);
+  useEffect(() => {
+    setAppReady(true);
+  }, []);
+
+  return (
+    <div suppressHydrationWarning>
+      {(typeof window === 'undefined') !== null && appReady && (
+        <Component {...pageProps} />
+      )}
+    </div>
+  );
 }
 
-export default MyApp
+export default MyApp;
