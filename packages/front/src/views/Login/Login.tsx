@@ -1,8 +1,13 @@
-import React from 'react';
 import TextField from '@mui/material/TextField';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { Button, Grid } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useMutation } from 'react-query';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
+import { useSignIn } from 'react-auth-kit';
 
 interface Values {
   email: string;
@@ -17,8 +22,35 @@ const validationSchema = yup.object().shape({
   password: yup.string().required('Password is reuired'),
 });
 
-const login = () => {
-  const onSubmit = async (values: Values) => {};
+const Login = () => {
+  const nav = useNavigate();
+  const signIn = useSignIn();
+
+  const loginMutation = useMutation({
+    mutationFn: (data) => axios.post('http://localhost:3006/auth/login', data),
+  });
+
+  const successToast = () => toast.success("You're in");
+  const errorToast = () => toast.error('Something went wrong');
+
+  const onSubmit = async (values: any) => {
+    loginMutation.mutate(values, {
+      onSuccess: (res) => {
+        successToast();
+        if (
+          signIn({
+            token: res.data.access_token,
+            expiresIn: parseInt(process.env.JWT_EXPIRE!) || 1000000,
+            tokenType: 'Bearer',
+          })
+        )
+          nav('/');
+      },
+      onError: () => {
+        errorToast();
+      },
+    });
+  };
 
   return (
     <>
@@ -83,4 +115,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;
