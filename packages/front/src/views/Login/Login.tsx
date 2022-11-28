@@ -2,12 +2,13 @@ import TextField from '@mui/material/TextField';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { Button, Grid } from '@mui/material';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useMutation } from 'react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useSignIn } from 'react-auth-kit';
+import { ReactComponent as LoginIcon } from '../../res/svgs/login.svg';
 
 interface Values {
   email: string;
@@ -53,65 +54,70 @@ const Login = () => {
   };
 
   return (
-    <>
-      <Formik
-        initialValues={{
-          email: '',
-          password: '',
-        }}
-        onSubmit={(values: Values) => onSubmit(values)}
-        validationSchema={validationSchema}
-      >
-        {(props) => (
-          <form onSubmit={props.handleSubmit}>
-            <Grid
-              direction="column"
-              container
-              xs={6}
-              sx={{ margin: '0 auto' }}
-              spacing={2}
-            >
-              {/* Email field */}
-              <Grid item>
-                <TextField
-                  fullWidth
-                  id="email-input"
-                  label="E-mail"
-                  variant="outlined"
-                  type="text"
-                  onChange={props.handleChange}
-                  onBlur={props.handleBlur}
-                  value={props.values.email}
-                  name="email"
-                  helperText={props.touched.email ? props.errors.email : ''}
-                />
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      marginY={2}
+      rowSpacing={4}
+    >
+      <Grid item>
+        <LoginIcon className="svgBig" />
+      </Grid>
+      <Grid item>
+        <Formik
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          onSubmit={(values: Values) => onSubmit(values)}
+          validationSchema={validationSchema}
+        >
+          {(props) => (
+            <form onSubmit={props.handleSubmit}>
+              <Grid direction="column" container rowSpacing={2}>
+                {/* Email field */}
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    id="email-input"
+                    label="E-mail"
+                    variant="outlined"
+                    type="text"
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    value={props.values.email}
+                    name="email"
+                    helperText={props.touched.email ? props.errors.email : ''}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    id="password-input"
+                    label="Password"
+                    variant="outlined"
+                    type="password"
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    value={props.values.password}
+                    name="password"
+                    helperText={
+                      props.touched.password ? props.errors.password : ''
+                    }
+                  />
+                </Grid>
+                <Grid item>
+                  <Button type="submit" fullWidth variant="contained">
+                    Login
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item>
-                <TextField
-                  fullWidth
-                  id="password-input"
-                  label="Password"
-                  variant="outlined"
-                  type="password"
-                  onChange={props.handleChange}
-                  onBlur={props.handleBlur}
-                  value={props.values.password}
-                  name="password"
-                  helperText={
-                    props.touched.password ? props.errors.password : ''
-                  }
-                />
-              </Grid>
-              <Grid item>
-                <Button type="submit" fullWidth variant="contained">
-                  Login
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        )}
-      </Formik>
-    </>
+            </form>
+          )}
+        </Formik>
+      </Grid>
+    </Grid>
   );
 };
 

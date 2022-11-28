@@ -1,0 +1,12 @@
+.svgBig {
+  height: 15rem;
+  width: auto;
+}
+
+html,
+body {
+  box-sizing: border-box;
+  height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  height: calc(var(--vh, 1vh) * 100);
+  max-width: 100%;
+}

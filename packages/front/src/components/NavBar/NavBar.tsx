@@ -6,6 +6,7 @@ import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 import SmokingRoomsRoundedIcon from '@mui/icons-material/SmokingRoomsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import EqualizerRoundedIcon from '@mui/icons-material/EqualizerRounded';
 import { toast } from 'react-toastify';
 
 const NavBar = () => {
@@ -39,6 +40,7 @@ const NavBar = () => {
     >
       <HomeRoundedIcon />
     </NavLink>,
+
     <NavLink
       to="/add"
       className={({ isActive }) =>
@@ -47,6 +49,16 @@ const NavBar = () => {
     >
       <SmokingRoomsRoundedIcon />
     </NavLink>,
+
+    <NavLink
+      to="/statistics"
+      className={({ isActive }) =>
+        isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
+      }
+    >
+      <EqualizerRoundedIcon />
+    </NavLink>,
+
     <NavLink
       to="/logout"
       onClick={() => toast.info('Logged out')}

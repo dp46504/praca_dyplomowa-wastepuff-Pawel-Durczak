@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Routes from './Routes';
 import theme from './Theme/theme';
 import { ThemeProvider } from '@mui/material/styles';
+import './globalStyle.css';
 
 function App() {
   const queryClient = new QueryClient();
