@@ -27,6 +27,6 @@ export class Pack {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne((type) => User, (user) => user.packs, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User)
   owner: User;
 }

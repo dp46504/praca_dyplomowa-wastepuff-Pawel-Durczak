@@ -23,6 +23,12 @@ import { PackService } from './pack.service';
 export class PackController {
   constructor(private packService: PackService) {}
 
+  @Get('active')
+  @UseGuards(JwtAuthGuard)
+  async getActivePack(@Req() req) {
+    return this.packService.getActivePack(req.user);
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard)
   async getUserPackages(@Req() req) {

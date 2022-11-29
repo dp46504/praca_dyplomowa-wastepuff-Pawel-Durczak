@@ -7,12 +7,9 @@ interface AuthState {
   token: string | null;
 }
 
-let initialToken =
-  typeof window === 'undefined' ? null : localStorage.getItem('token');
-
 // Define the initial state using that type
 const initialState: AuthState = {
-  token: initialToken,
+  token: localStorage.getItem('token'),
 };
 
 export const authSlice = createSlice({

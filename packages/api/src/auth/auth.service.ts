@@ -43,4 +43,8 @@ export class AuthService {
     }
     return null;
   }
+
+  async getUser(user) {
+    return await this.usersRepository.findOne({ where: { email: user.email } });
+  }
 }

@@ -1,42 +1,186 @@
 import {
   Grid,
   Paper,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
+  Typography,
+  CircularProgress,
+  Button,
 } from '@mui/material';
-import SmokingRoomsRoundedIcon from '@mui/icons-material/SmokingRoomsRounded';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import { Pack } from '../../types/PackTypes';
-import { useCallback } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { toast } from 'react-toastify';
+import classes from './ListOfPacks.module.css';
 
 interface ListOfPacksType {
   packs: Pack[];
+  isLoading: boolean;
+  activePackId: number | null;
+  setFormVisible: Dispatch<SetStateAction<boolean>>;
+  formVisible: boolean;
 }
 
-const ListOfPacks = ({ packs }: ListOfPacksType) => {
-  const mapToObject = useCallback((pack: Pack) => {
+const ListOfPacks = ({
+  packs,
+  isLoading,
+  activePackId,
+  setFormVisible,
+  formVisible,
+}: ListOfPacksType) => {
+  const queryClient = useQueryClient();
+  const [selectedPackId, setSelectedPackId] = useState<null | number>(null);
+  const [selectedPackName, setSelectedPackName] = useState<null | string>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const activePackMutation = useMutation({
+    mutationKey: 'pack',
+    mutationFn: () =>
+      axios.patch(
+        `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}/pack/setActive/${selectedPackId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      ),
+    onSuccess: async () => {
+      toast.success('Active pack updated');
+      queryClient.invalidateQueries(['pack']);
+      queryClient.invalidateQueries(['activepack']);
+    },
+    onError: async () => toast.error('Something went wrong'),
+  });
+
+  const deletePackMutation = useMutation({
+    mutationKey: 'pack',
+    mutationFn: () =>
+      axios.delete(
+        `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}/pack/${selectedPackId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      ),
+    onSuccess: async () => {
+      queryClient.invalidateQueries(['pack']);
+      toast.success('Pack deleted');
+    },
+    onError: async () => toast.error('Something went wrong'),
+  });
+
+  const handleYes = async () => {
+    activePackMutation.mutate();
+    setDialogOpen(false);
+    setSelectedPackId(null);
+    setSelectedPackName(null);
+  };
+  const handleNo = () => {
+    setDialogOpen(false);
+    setSelectedPackId(null);
+    setSelectedPackName(null);
+  };
+
+  const handleDelete = () => {
+    deletePackMutation.mutate();
+    setDialogOpen(false);
+    setSelectedPackId(null);
+    setSelectedPackName(null);
+  };
+
+  const mapToObject = (pack: Pack) => {
     return (
-      <Grid item xs={5.5}>
-        <Paper key={pack.id}>
-          <ListItem>
-            <ListItemIcon>
-              <SmokingRoomsRoundedIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary={pack.name}
-              secondary={`${pack.left}/${pack.size}`}
-            />
-          </ListItem>
+      <Grid key={pack.id} item xs={5.5} sx={{ cursor: 'pointer' }}>
+        <Paper
+          sx={{
+            border: pack.id === activePackId ? 2 : 0,
+            borderColor: 'primary.main',
+          }}
+          onClick={() => {
+            setSelectedPackId(pack.id);
+            setSelectedPackName(pack.name);
+            setDialogOpen(true);
+          }}
+        >
+          <Grid container direction="column" alignItems="center" padding={1}>
+            {/* Main text */}
+            <Grid item>
+              <Typography color="primary" fontWeight="bold" variant="body1">
+                {pack.name}
+              </Typography>
+            </Grid>
+            {/* Secondary text */}
+            <Grid item>
+              <Typography color="primary" variant="caption">
+                {pack.left}/{pack.size}{' '}
+              </Typography>
+            </Grid>
+          </Grid>
         </Paper>
       </Grid>
     );
-  }, []);
+  };
 
   return (
-    <Grid container justifyContent="space-evenly" gap={1}>
-      {packs?.length !== 0 && packs?.map((pack: Pack) => mapToObject(pack))}
-    </Grid>
+    <>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleNo}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle color="primary" id="alert-dialog-title">
+          {selectedPackName}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText color="primary" id="alert-dialog-description">
+            Do you want to set this pack as your active pack or delete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="error" onClick={handleDelete}>
+            Delete
+          </Button>
+          <Button onClick={handleYes}>Yes</Button>
+          <Button onClick={handleNo} autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Grid container justifyContent="space-evenly">
+        {isLoading && <CircularProgress />}
+        {packs?.length !== 0 && packs?.map((pack: Pack) => mapToObject(pack))}
+
+        <Grid item xs={5.5} sx={{ cursor: 'pointer' }}>
+          <Paper
+            sx={{ textAlign: 'center' }}
+            onClick={() => {
+              setFormVisible((prev) => !prev);
+            }}
+          >
+            <Typography
+              color="primary"
+              padding={1.9}
+              fontWeight="bold"
+              variant="h5"
+            >
+              {formVisible ? '-' : '+'}
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 

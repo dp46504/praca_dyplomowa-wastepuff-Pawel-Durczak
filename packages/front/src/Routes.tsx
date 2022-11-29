@@ -3,10 +3,11 @@ import { ToastContainer } from 'react-toastify';
 import Home from './views/Home/Home';
 import Login from './views/Login/Login';
 import Register from './views/Register/Register';
-import { RequireAuth } from 'react-auth-kit';
 import NavBar from './components/NavBar/NavBar';
 import Logout from './views/Logout/Logout';
 import PackView from './views/Pack/PackView';
+import PrivateRoute from './components/PrivateRoute';
+import Filler from './components/Filler';
 
 const Routes = () => {
   return (
@@ -18,17 +19,17 @@ const Routes = () => {
           <Route
             index
             element={
-              <RequireAuth loginPath={'/login'}>
+              <PrivateRoute>
                 <Home />
-              </RequireAuth>
+              </PrivateRoute>
             }
           />
           <Route
             path="pack"
             element={
-              <RequireAuth loginPath={'/login'}>
+              <PrivateRoute>
                 <PackView />
-              </RequireAuth>
+              </PrivateRoute>
             }
           />
           <Route path="login" element={<Login />} />
@@ -36,6 +37,7 @@ const Routes = () => {
           <Route path="register" element={<Register />} />
         </Route>
       </RouterRoutes>
+      <Filler />
     </>
   );
 };

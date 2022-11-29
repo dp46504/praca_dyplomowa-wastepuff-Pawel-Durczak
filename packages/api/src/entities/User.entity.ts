@@ -23,10 +23,10 @@ export class User {
   @Exclude()
   password: string;
 
-  @OneToMany((type) => Pack, (pack) => pack.owner, { cascade: true })
-  packs: Pack[];
+  @Column({ type: 'float', nullable: true })
+  wasted: number;
 
-  @OneToOne(() => Pack, { nullable: true })
+  @OneToOne(() => Pack, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn()
   activePack: Pack;
 }

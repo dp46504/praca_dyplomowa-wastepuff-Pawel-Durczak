@@ -27,7 +27,10 @@ const Register = () => {
 
   const registerMutation = useMutation({
     mutationFn: (data) =>
-      axios.post('http://localhost:3006/auth/register', data),
+      axios.post(
+        `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}/auth/register`,
+        data,
+      ),
   });
 
   const successToast = () => toast.success('Registered 🙌');
@@ -74,7 +77,7 @@ const Register = () => {
                     fullWidth
                     id="email-input"
                     label="E-mail"
-                    variant="outlined"
+                    variant="filled"
                     type="text"
                     onChange={props.handleChange}
                     onBlur={props.handleBlur}
@@ -88,7 +91,7 @@ const Register = () => {
                     fullWidth
                     id="password-input"
                     label="Password"
-                    variant="outlined"
+                    variant="filled"
                     type="password"
                     onChange={props.handleChange}
                     onBlur={props.handleBlur}

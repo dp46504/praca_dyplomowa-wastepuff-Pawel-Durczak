@@ -15,7 +15,7 @@
   height: 100%;
   display: grid;
   place-items: center;
-  background-color: #d7e3f5;
+  background-color: #323743;
   position: relative;
   transition: all 250ms;
   font-size: 3rem;
@@ -36,5 +36,5 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(to top, #314eac 0%, transparent 15%);
+  background-image: linear-gradient(to top, #6fa600 0%, transparent 10%);
 }

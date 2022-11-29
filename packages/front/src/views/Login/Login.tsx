@@ -7,8 +7,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useMutation } from 'react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
-import { useSignIn } from 'react-auth-kit';
 import { ReactComponent as LoginIcon } from '../../res/svgs/login.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { login, logout } from '../../store/slices/authSlice';
+import { useEffect } from 'react';
 
 interface Values {
   email: string;
@@ -25,10 +28,18 @@ const validationSchema = yup.object().shape({
 
 const Login = () => {
   const nav = useNavigate();
-  const signIn = useSignIn();
+  const token = useSelector((state: RootState) => state.auth.token);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (token) nav('/');
+  }, []);
 
   const loginMutation = useMutation({
-    mutationFn: (data) => axios.post('http://localhost:3006/auth/login', data),
+    mutationFn: (data) =>
+      axios.post(
+        `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}/auth/login`,
+        data,
+      ),
   });
 
   const successToast = () => toast.success("You're in");
@@ -38,17 +49,12 @@ const Login = () => {
     loginMutation.mutate(values, {
       onSuccess: (res) => {
         successToast();
-        if (
-          signIn({
-            token: res.data.access_token,
-            expiresIn: parseInt(process.env.JWT_EXPIRE!) || 1000000,
-            tokenType: 'Bearer',
-          })
-        )
-          nav('/');
+        dispatch(login(res.data.access_token));
+        nav('/');
       },
       onError: () => {
         errorToast();
+        dispatch(logout());
       },
     });
   };
@@ -82,7 +88,7 @@ const Login = () => {
                     fullWidth
                     id="email-input"
                     label="E-mail"
-                    variant="outlined"
+                    variant="filled"
                     type="text"
                     onChange={props.handleChange}
                     onBlur={props.handleBlur}
@@ -96,7 +102,7 @@ const Login = () => {
                     fullWidth
                     id="password-input"
                     label="Password"
-                    variant="outlined"
+                    variant="filled"
                     type="password"
                     onChange={props.handleChange}
                     onBlur={props.handleBlur}

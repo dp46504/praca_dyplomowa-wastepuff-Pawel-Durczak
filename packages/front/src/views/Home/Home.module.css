@@ -1,0 +1,12 @@
+.divider {
+  width: 100%;
+  height: 0.2rem;
+  background-color: gray;
+  opacity: 0.5;
+}
+
+.wastedContainer {
+  width: 80%;
+  height: fit-content;
+  padding: 2rem;
+}

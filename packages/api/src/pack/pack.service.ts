@@ -18,11 +18,28 @@ export class PackService {
     private packRepository: Repository<Pack>,
   ) {}
 
+  public async getActivePack(user) {
+    const userObject = await this.usersRepository.findOne({
+      where: {
+        email: user.email,
+      },
+      relations: {
+        activePack: true,
+      },
+    });
+    return userObject.activePack;
+  }
+
   public async getUserPackages(user) {
     const packages = await this.packRepository.find({
       where: {
         owner: {
           email: user.email,
+        },
+      },
+      relations: {
+        owner: {
+          activePack: true,
         },
       },
     });
@@ -86,6 +103,9 @@ export class PackService {
         },
       },
     });
+    const userObject = await this.usersRepository.findOne({
+      where: { email: user.email },
+    });
 
     if (!pack) throw new NotFoundException('Pack was not found');
 
@@ -94,7 +114,17 @@ export class PackService {
         'Number of cigarettes left must be lesser than pack size',
       );
 
+    if (patchPackDto.left > pack.left)
+      throw new BadRequestException(
+        "You can't remove more cigarettes than it's left in the package",
+      );
+
+    userObject.wasted +=
+      (pack.price / pack.size) * Math.abs(pack.left - patchPackDto.left);
+
     pack.left = patchPackDto.left;
+    await this.usersRepository.save(userObject);
+    if (patchPackDto.left === 0) return this.packRepository.remove(pack);
     return this.packRepository.save(pack);
   }
 

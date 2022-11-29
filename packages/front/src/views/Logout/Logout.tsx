@@ -1,14 +1,13 @@
-import { useSignOut } from 'react-auth-kit';
-import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { Navigate } from 'react-router';
+import { logout } from '../../store/slices/authSlice';
 
 const Logout = () => {
-  const signOut = useSignOut();
-  const nav = useNavigate();
+  const dispatch = useDispatch();
 
-  signOut();
-  nav('/login');
+  dispatch(logout());
 
-  return <div>Logout</div>;
+  return <Navigate to="/login"></Navigate>;
 };
 
 export default Logout;
