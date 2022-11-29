@@ -60,4 +60,13 @@ export class PackController {
   async deletePack(@Req() req, @Param('packId', ParseIntPipe) packId: number) {
     return this.packService.deletePack(req.user, packId);
   }
+
+  @Patch('setActive/:packId')
+  @UseGuards(JwtAuthGuard)
+  async setActivePack(
+    @Req() req,
+    @Param('packId', ParseIntPipe) packId: number,
+  ) {
+    return this.packService.setActivePack(req.user, packId);
+  }
 }

@@ -18,6 +18,11 @@
   background-color: #d7e3f5;
   position: relative;
   transition: all 250ms;
+  font-size: 3rem;
+}
+
+.iconStyle {
+  font-size: 1.7rem;
 }
 
 .navItem:any-link {

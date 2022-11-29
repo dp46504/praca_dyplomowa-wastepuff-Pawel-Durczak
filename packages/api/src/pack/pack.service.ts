@@ -111,4 +111,25 @@ export class PackService {
 
     return await this.packRepository.remove(pack);
   }
+
+  public async setActivePack(user, packId: number) {
+    const userObject = await this.usersRepository.findOne({
+      where: {
+        email: user.email,
+      },
+    });
+    const pack = await this.packRepository.findOne({
+      where: {
+        id: packId,
+        owner: {
+          email: user.email,
+        },
+      },
+    });
+
+    if (!pack) throw new NotFoundException('Pack was not found');
+    userObject.activePack = pack;
+
+    return this.usersRepository.save(userObject);
+  }
 }

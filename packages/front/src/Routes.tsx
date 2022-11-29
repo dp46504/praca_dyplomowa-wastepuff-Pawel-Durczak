@@ -6,6 +6,7 @@ import Register from './views/Register/Register';
 import { RequireAuth } from 'react-auth-kit';
 import NavBar from './components/NavBar/NavBar';
 import Logout from './views/Logout/Logout';
+import PackView from './views/Pack/PackView';
 
 const Routes = () => {
   return (
@@ -19,6 +20,14 @@ const Routes = () => {
             element={
               <RequireAuth loginPath={'/login'}>
                 <Home />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="pack"
+            element={
+              <RequireAuth loginPath={'/login'}>
+                <PackView />
               </RequireAuth>
             }
           />

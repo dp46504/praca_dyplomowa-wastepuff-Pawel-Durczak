@@ -5,8 +5,8 @@ import { NavLink } from 'react-router-dom';
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 import SmokingRoomsRoundedIcon from '@mui/icons-material/SmokingRoomsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import EqualizerRoundedIcon from '@mui/icons-material/EqualizerRounded';
+import BackpackOutlinedIcon from '@mui/icons-material/BackpackOutlined';
 import { toast } from 'react-toastify';
 
 const NavBar = () => {
@@ -19,7 +19,7 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <LoginIcon />
+      <LoginIcon className={classes.iconStyle} />
     </NavLink>,
     <NavLink
       to="/register"
@@ -27,7 +27,7 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <PersonAddRoundedIcon />
+      <PersonAddRoundedIcon className={classes.iconStyle} />
     </NavLink>,
   ];
 
@@ -38,16 +38,16 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <HomeRoundedIcon />
+      <SmokingRoomsRoundedIcon className={classes.iconStyle} />
     </NavLink>,
 
     <NavLink
-      to="/add"
+      to="/pack"
       className={({ isActive }) =>
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <SmokingRoomsRoundedIcon />
+      <BackpackOutlinedIcon className={classes.iconStyle} />
     </NavLink>,
 
     <NavLink
@@ -56,7 +56,7 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <EqualizerRoundedIcon />
+      <EqualizerRoundedIcon className={classes.iconStyle} />
     </NavLink>,
 
     <NavLink
@@ -66,7 +66,7 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <LogoutRoundedIcon />
+      <LogoutRoundedIcon className={classes.iconStyle} />
     </NavLink>,
   ];
 
