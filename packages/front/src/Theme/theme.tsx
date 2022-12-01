@@ -81,6 +81,13 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiGrid: {
+      styleOverrides: {
+        root: {
+          flexGrow: 1,
+        },
+      },
+    },
   },
 });
 

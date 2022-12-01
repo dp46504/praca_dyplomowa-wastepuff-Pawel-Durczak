@@ -1,13 +1,5 @@
-import {
-  Button,
-  Card,
-  Divider,
-  Grid,
-  Link,
-  Paper,
-  Typography,
-} from '@mui/material';
-import { Box } from '@mui/system';
+import { Button, Card, Grid, Paper, Typography } from '@mui/material';
+import FlipNumbers from 'react-flip-numbers';
 import axios from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -15,12 +7,66 @@ import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { RootState } from '../../store/store';
 import classes from './Home.module.css';
+import { useState } from 'react';
+import theme from '../../Theme/theme';
+import { useTheme } from '@mui/material/styles';
 
 const Home = () => {
   const queryClient = useQueryClient();
+  const [secondsClean, setSecondsClean] = useState<number>(0);
+  const theme = useTheme();
+
+  const getTimeSinceString = (pastDate: Date) => {
+    const now = new Date(Date.now()).getTime();
+    const past = new Date(pastDate).getTime();
+    const diff = new Date(Math.abs(now - past));
+    const days = (diff.getTime() / 1000 / 60 / 60 / 24).toFixed(0);
+    return `${days}:${diff.getHours()}:${diff.getMinutes()}.${diff.getSeconds()}`;
+  };
+
+  const getDaysString = (pastDate: Date) => {
+    const now = new Date(Date.now()).getTime();
+    const past = new Date(pastDate).getTime();
+    const diff = new Date(Math.abs(now - past));
+    return (diff.getTime() / 1000 / 60 / 60 / 24).toFixed(0).toString();
+  };
+
+  const getHoursString = (pastDate: Date) => {
+    const now = new Date(Date.now()).getTime();
+    const past = new Date(pastDate).getTime();
+    const diff = new Date(Math.abs(now - past));
+    return diff.getHours() - 1;
+  };
+
+  const getMinutesString = (pastDate: Date) => {
+    const now = new Date(Date.now()).getTime();
+    const past = new Date(pastDate).getTime();
+    const diff = new Date(Math.abs(now - past));
+    const value = diff.getMinutes();
+    if (value < 10) return `0${value}`;
+    return value;
+  };
+  const getSecondsString = (pastDate: Date) => {
+    const now = new Date(Date.now()).getTime();
+    const past = new Date(pastDate).getTime();
+    const diff = new Date(Math.abs(now - past));
+    const value = diff.getSeconds();
+    if (value < 10) return `0${value}`;
+    return value;
+  };
+
+  const getSecondsSince = (pastDate: Date) => {
+    const now = new Date(Date.now()).getTime();
+    const past = new Date(pastDate).getTime();
+    const diff = Math.abs(now - past);
+    return Math.floor(new Date(diff).getTime() / 1000) - 1200;
+  };
 
   const token = useSelector((state: RootState) => state.auth.token);
   const nav = useNavigate();
+  const timer = setInterval(() => {
+    setSecondsClean((prev) => prev + 1);
+  }, 1);
 
   const { data, isLoading } = useQuery({
     queryKey: 'activepack',
@@ -52,7 +98,10 @@ const Home = () => {
             },
           },
         )
-        .then((res) => res.data),
+        .then((res) => {
+          setSecondsClean(getSecondsSince(res.data.lastSmoked));
+          return res.data;
+        }),
   });
 
   const minusOneMutation = useMutation({
@@ -83,8 +132,15 @@ const Home = () => {
   };
 
   return (
-    <Grid container direction="column" gap={3} alignItems="center">
-      <Grid item>
+    <Grid
+      container
+      direction="column"
+      justifyContent="space-between"
+      alignItems="center"
+      gap={5}
+    >
+      {/* Active Pack */}
+      <Grid item xs={12} marginX={2} sx={{ width: 'sm' }}>
         <Card elevation={3}>
           <Grid container direction="column" gap={1} alignItems="center">
             {/* Active pack title */}
@@ -141,7 +197,7 @@ const Home = () => {
                           {/* Cost per one */}
                           <Grid item>
                             <Typography color="primary" variant="caption">
-                              {data.price / data.size} PLN per one
+                              {(data.price / data.size).toFixed(2)} PLN per one
                             </Typography>
                           </Grid>
                         </Grid>
@@ -196,27 +252,161 @@ const Home = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12}>
-        <Box
-          sx={{
-            padding: '3rem 10rem',
-            backgroundColor: 'primary.dark',
-            '&:hover': {
-              backgroundColor: 'primary.main',
-              opacity: [0.9, 0.8, 0.7],
-            },
-          }}
-        >
-          {getUserQuery?.data?.wasted?.toFixed(2)}
-          {!getUserQuery?.data?.wasted && (
-            <Typography>
-              You didn't lost any money because of your habit
-            </Typography>
-          )}
-        </Box>
+      {/* Money wasted counter */}
+      <Grid
+        item
+        xs={12}
+        sx={{ width: 1, color: theme.palette.primary.main }}
+        className={classes.wastedContainer}
+      >
+        <FlipNumbers
+          height={60}
+          width={50}
+          color={theme.palette.primary.main}
+          background="transparent"
+          play
+          perspective={600}
+          numbers={`${
+            getUserQuery?.data?.wasted?.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }) || 0
+          } PLN`}
+        />
       </Grid>
+
+      {/* Time clean counter */}
+      {getUserQuery?.data?.lastSmoked && (
+        <Card sx={{ width: 0.7, maxWidth: 'sm', margin: '0 2rem' }}>
+          <Grid container direction="column">
+            <Grid item>
+              <Typography
+                sx={{ textAlign: 'center' }}
+                variant="h4"
+                fontWeight="bold"
+                color="primary.light"
+              >
+                {getDaysString(getUserQuery?.data?.lastSmoked)} Days
+              </Typography>
+            </Grid>
+            {/* Horizontal container */}
+            <Grid item>
+              <Grid
+                container
+                gap={1.5}
+                sx={{ width: 1 }}
+                justifyContent="space-between"
+              >
+                {/* Hours */}
+                <Grid item xs={3} sx={{ width: 1 }}>
+                  <Paper>
+                    <Grid
+                      container
+                      gap={2}
+                      alignItems="center"
+                      direction="column"
+                    >
+                      {/* Up */}
+                      <Grid item>
+                        <Typography
+                          color="primary.light"
+                          fontWeight="bold"
+                          variant="h4"
+                        >
+                          {getHoursString(getUserQuery?.data?.lastSmoked)}
+                        </Typography>
+                      </Grid>
+                      {/* Down */}
+                      <Grid item>
+                        <Typography
+                          color="primary"
+                          fontWeight="bold"
+                          variant="h6"
+                        >
+                          H
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </Grid>
+                {/* Minutes */}
+                <Grid item xs={3} sx={{ width: 1 }}>
+                  <Paper>
+                    <Grid
+                      container
+                      gap={2}
+                      alignItems="center"
+                      direction="column"
+                    >
+                      {/* Up */}
+                      <Grid item>
+                        <Typography
+                          color="primary.light"
+                          fontWeight="bold"
+                          variant="h4"
+                        >
+                          {getMinutesString(getUserQuery?.data?.lastSmoked)}
+                        </Typography>
+                      </Grid>
+                      {/* Down */}
+                      <Grid item>
+                        <Typography
+                          color="primary"
+                          fontWeight="bold"
+                          variant="h6"
+                        >
+                          M
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </Grid>
+                {/* Seconds */}
+                <Grid item xs={3} sx={{ width: 1 }}>
+                  <Paper>
+                    <Grid
+                      container
+                      gap={2}
+                      alignItems="center"
+                      direction="column"
+                    >
+                      {/* Up */}
+                      <Grid item>
+                        <Typography
+                          color="primary.light"
+                          fontWeight="bold"
+                          variant="h4"
+                        >
+                          {getSecondsString(getUserQuery?.data?.lastSmoked)}
+                        </Typography>
+                      </Grid>
+                      {/* Down */}
+                      <Grid item>
+                        <Typography
+                          color="primary"
+                          fontWeight="bold"
+                          variant="h6"
+                        >
+                          S
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Card>
+      )}
     </Grid>
   );
 };
-// {getUserQuery?.data?.wasted.toFixed(2)}
 export default Home;
+
+// {`${getDaysString(
+//   getUserQuery?.data?.lastSmoked,
+// )} / ${getHoursString(
+//   getUserQuery?.data?.lastSmoked,
+// )}:${getMinutesString(
+//   getUserQuery?.data?.lastSmoked,
+// )}.${getSecondsString(getUserQuery?.data?.lastSmoked)}`}

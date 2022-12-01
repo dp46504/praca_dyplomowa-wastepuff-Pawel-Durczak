@@ -100,7 +100,14 @@ const ListOfPacks = ({
 
   const mapToObject = (pack: Pack) => {
     return (
-      <Grid key={pack.id} item xs={5.5} sx={{ cursor: 'pointer' }}>
+      <Grid
+        key={pack.id}
+        minWidth="10rem"
+        maxWidth="100%"
+        item
+        xs={5.5}
+        sx={{ cursor: 'pointer' }}
+      >
         <Paper
           sx={{
             border: pack.id === activePackId ? 2 : 0,
@@ -158,11 +165,17 @@ const ListOfPacks = ({
         </DialogActions>
       </Dialog>
 
-      <Grid container justifyContent="space-evenly">
+      <Grid
+        sx={{ maxWidth: 'sm' }}
+        container
+        gap={2}
+        justifyContent="space-around"
+        alignItems="center"
+      >
         {isLoading && <CircularProgress />}
         {packs?.length !== 0 && packs?.map((pack: Pack) => mapToObject(pack))}
 
-        <Grid item xs={5.5} sx={{ cursor: 'pointer' }}>
+        <Grid item xs={9} sx={{ cursor: 'pointer' }}>
           <Paper
             sx={{ textAlign: 'center' }}
             onClick={() => {

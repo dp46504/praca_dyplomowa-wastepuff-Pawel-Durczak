@@ -8,25 +8,19 @@ import {
 import { User } from './User.entity';
 
 @Entity()
-export class Pack {
+export class Log {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  nameOfCigarette: string;
 
   @Column()
-  size: number;
-
-  @Column()
-  left: number;
-
-  @Column()
-  price: number;
+  quantity: number;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  owner: User;
+  user: User;
 }

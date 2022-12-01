@@ -1,0 +1,14 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class new1669834479483 implements MigrationInterface {
+    name = 'new1669834479483'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "user" ADD "lastSmoked" date`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "user" DROP COLUMN "lastSmoked"`);
+    }
+
+}

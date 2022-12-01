@@ -67,7 +67,7 @@ const AddPackForm = () => {
   };
 
   return (
-    <Grid container>
+    <Grid container sx={{ maxWidth: 'sm' }}>
       <Formik
         initialValues={{
           name: '',

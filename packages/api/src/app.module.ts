@@ -7,7 +7,11 @@ import { dataSourceOptions } from './db/data-source';
 import { PackModule } from './pack/pack.module';
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forRootAsync(dataSourceOptions), PackModule],
+  imports: [
+    AuthModule,
+    TypeOrmModule.forRootAsync(dataSourceOptions),
+    PackModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

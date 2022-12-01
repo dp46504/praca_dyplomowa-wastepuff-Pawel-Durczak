@@ -6,7 +6,19 @@
 }
 
 .wastedContainer {
-  width: 80%;
-  height: fit-content;
-  padding: 2rem;
+  font-family: 'Lexend', sans-serif;
+}
+.wastedContainer * {
+  color: inherit;
+}
+.wastedContainer span {
+  color: inherit;
+  font-size: 2rem;
+  align-self: flex-end;
+  text-align: center;
+}
+
+.wastedContainer section {
+  display: flex;
+  align-items: flex-end;
 }

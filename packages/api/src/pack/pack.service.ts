@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Log } from 'src/entities/Log.entity';
 import { Pack } from 'src/entities/Pack.entity';
 import { User } from 'src/entities/User.entity';
 import { Repository } from 'typeorm';
@@ -16,6 +17,8 @@ export class PackService {
     private usersRepository: Repository<User>,
     @InjectRepository(Pack)
     private packRepository: Repository<Pack>,
+    @InjectRepository(Log)
+    private logRepository: Repository<Log>,
   ) {}
 
   public async getActivePack(user) {
@@ -122,8 +125,17 @@ export class PackService {
     userObject.wasted +=
       (pack.price / pack.size) * Math.abs(pack.left - patchPackDto.left);
 
+    userObject.lastSmoked = new Date(Date.now());
+
+    const log = this.logRepository.create();
+    log.user = userObject;
+    log.nameOfCigarette = pack.name;
+    log.quantity = Math.abs(pack.left - patchPackDto.left);
+    userObject.quantitySmoked += Math.abs(pack.left - patchPackDto.left);
+
     pack.left = patchPackDto.left;
     await this.usersRepository.save(userObject);
+    await this.logRepository.save(log);
     if (patchPackDto.left === 0) return this.packRepository.remove(pack);
     return this.packRepository.save(pack);
   }

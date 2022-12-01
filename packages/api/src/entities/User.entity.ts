@@ -29,4 +29,10 @@ export class User {
   @OneToOne(() => Pack, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn()
   activePack: Pack;
+
+  @Column({ type: 'timestamptz', nullable: true }) // Recommended
+  lastSmoked: Date;
+
+  @Column({ nullable: true })
+  quantitySmoked: number;
 }
