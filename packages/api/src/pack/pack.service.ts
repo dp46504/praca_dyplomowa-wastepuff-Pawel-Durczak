@@ -131,6 +131,7 @@ export class PackService {
     log.user = userObject;
     log.nameOfCigarette = pack.name;
     log.quantity = Math.abs(pack.left - patchPackDto.left);
+    log.price = log.quantity * (pack.price / pack.size);
     userObject.quantitySmoked += Math.abs(pack.left - patchPackDto.left);
 
     pack.left = patchPackDto.left;

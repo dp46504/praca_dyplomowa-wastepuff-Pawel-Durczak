@@ -8,6 +8,7 @@ import Logout from './views/Logout/Logout';
 import PackView from './views/Pack/PackView';
 import PrivateRoute from './components/PrivateRoute';
 import Filler from './components/Filler';
+import StatisticView from './views/Statisctics/StatisticView';
 
 const Routes = () => {
   return (
@@ -32,6 +33,7 @@ const Routes = () => {
               </PrivateRoute>
             }
           />
+          <Route path="statistics" element={<StatisticView />} />
           <Route path="login" element={<Login />} />
           <Route path="logout" element={<Logout />} />
           <Route path="register" element={<Register />} />

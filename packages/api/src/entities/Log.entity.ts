@@ -18,6 +18,9 @@ export class Log {
   @Column()
   quantity: number;
 
+  @Column({ type: 'float' })
+  price: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
