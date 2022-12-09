@@ -1,4 +1,4 @@
-import { Button, Card, Grid, Paper, Typography } from '@mui/material';
+import { Button, Card, Grid, Paper, Tooltip, Typography } from '@mui/material';
 import FlipNumbers from 'react-flip-numbers';
 import axios from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -186,13 +186,18 @@ const Home = () => {
                         <Grid container direction="column">
                           {/* Pack name */}
                           <Grid item>
-                            <Typography
-                              color="primary"
-                              fontWeight="bold"
-                              variant="h6"
+                            <Tooltip
+                              placement="top"
+                              title="Name of the active package"
                             >
-                              {data.name}
-                            </Typography>
+                              <Typography
+                                color="primary"
+                                fontWeight="bold"
+                                variant="h6"
+                              >
+                                {data.name}
+                              </Typography>
+                            </Tooltip>
                           </Grid>
                           {/* Cost per one */}
                           <Grid item>
@@ -208,24 +213,31 @@ const Home = () => {
                           <Grid container gap={1}>
                             {/* Pack left value */}
                             <Grid item xs={12}>
-                              <Typography
-                                sx={{ textAlign: 'center' }}
-                                fontWeight="bold"
-                                color="primary.light"
-                              >
-                                {data.left}
-                              </Typography>
+                              <Tooltip placement="top" title="Quantity left">
+                                <Typography
+                                  sx={{ textAlign: 'center' }}
+                                  fontWeight="bold"
+                                  color="primary.light"
+                                >
+                                  {data.left}
+                                </Typography>
+                              </Tooltip>
                             </Grid>
                             <div className={classes.divider}></div>
                             {/* Pack size value */}
                             <Grid item xs={12}>
-                              <Typography
-                                sx={{ textAlign: 'center' }}
-                                color="primary.dark"
-                                fontWeight="bold"
+                              <Tooltip
+                                placement="top"
+                                title="Original pack size"
                               >
-                                {data.size}
-                              </Typography>
+                                <Typography
+                                  sx={{ textAlign: 'center' }}
+                                  color="primary.dark"
+                                  fontWeight="bold"
+                                >
+                                  {data.size}
+                                </Typography>
+                              </Tooltip>
                             </Grid>
                           </Grid>
                         </Card>
@@ -233,15 +245,17 @@ const Home = () => {
 
                       {/* Button */}
                       <Grid item xs={12}>
-                        <Button
-                          onClick={handleMinusOne}
-                          variant="contained"
-                          fullWidth
-                        >
-                          <Typography fontWeight="bold" variant="subtitle1">
-                            -1
-                          </Typography>
-                        </Button>
+                        <Tooltip placement="top" title="Smoke one">
+                          <Button
+                            onClick={handleMinusOne}
+                            variant="contained"
+                            fullWidth
+                          >
+                            <Typography fontWeight="bold" variant="subtitle1">
+                              -1
+                            </Typography>
+                          </Button>
+                        </Tooltip>
                       </Grid>
                     </Grid>
                   </Paper>
@@ -253,160 +267,156 @@ const Home = () => {
       </Grid>
 
       {/* Money wasted counter */}
-      <Grid
-        item
-        xs={12}
-        sx={{ width: 1, color: theme.palette.primary.main }}
-        className={classes.wastedContainer}
-      >
-        <FlipNumbers
-          height={60}
-          width={50}
-          color={theme.palette.primary.main}
-          background="transparent"
-          play
-          perspective={600}
-          numbers={`${
-            getUserQuery?.data?.wasted?.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }) || 0
-          } PLN`}
-        />
-      </Grid>
+      <Tooltip placement="top" title="Total of wasted money">
+        <Grid
+          item
+          xs={12}
+          sx={{ width: 1, color: theme.palette.primary.main }}
+          className={classes.wastedContainer}
+        >
+          <FlipNumbers
+            height={60}
+            width={50}
+            color={theme.palette.primary.main}
+            background="transparent"
+            play
+            perspective={600}
+            numbers={`${
+              getUserQuery?.data?.wasted?.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }) || 0
+            } PLN`}
+          />
+        </Grid>
+      </Tooltip>
 
       {/* Time clean counter */}
       {getUserQuery?.data?.lastSmoked && (
-        <Card sx={{ width: 0.7, maxWidth: 'sm', margin: '0 2rem' }}>
-          <Grid container direction="column">
-            <Grid item>
-              <Typography
-                sx={{ textAlign: 'center' }}
-                variant="h4"
-                fontWeight="bold"
-                color="primary.light"
-              >
-                {getDaysString(getUserQuery?.data?.lastSmoked)} Days
-              </Typography>
-            </Grid>
-            {/* Horizontal container */}
-            <Grid item>
-              <Grid
-                container
-                gap={1.5}
-                sx={{ width: 1 }}
-                justifyContent="space-between"
-              >
-                {/* Hours */}
-                <Grid item xs={3} sx={{ width: 1 }}>
-                  <Paper>
-                    <Grid
-                      container
-                      gap={2}
-                      alignItems="center"
-                      direction="column"
-                    >
-                      {/* Up */}
-                      <Grid item>
-                        <Typography
-                          color="primary.light"
-                          fontWeight="bold"
-                          variant="h4"
-                        >
-                          {getHoursString(getUserQuery?.data?.lastSmoked)}
-                        </Typography>
+        <Tooltip placement="top" title="Time since last cigarette">
+          <Card sx={{ width: 0.7, maxWidth: 'sm', margin: '0 2rem' }}>
+            <Grid container direction="column">
+              <Grid item>
+                <Typography
+                  sx={{ textAlign: 'center' }}
+                  variant="h4"
+                  fontWeight="bold"
+                  color="primary.light"
+                >
+                  {getDaysString(getUserQuery?.data?.lastSmoked)} Days
+                </Typography>
+              </Grid>
+              {/* Horizontal container */}
+              <Grid item>
+                <Grid
+                  container
+                  gap={1.5}
+                  sx={{ width: 1 }}
+                  justifyContent="space-between"
+                >
+                  {/* Hours */}
+                  <Grid item xs={3} sx={{ width: 1 }}>
+                    <Paper>
+                      <Grid
+                        container
+                        gap={2}
+                        alignItems="center"
+                        direction="column"
+                      >
+                        {/* Up */}
+                        <Grid item>
+                          <Typography
+                            color="primary.light"
+                            fontWeight="bold"
+                            variant="h4"
+                          >
+                            {getHoursString(getUserQuery?.data?.lastSmoked)}
+                          </Typography>
+                        </Grid>
+                        {/* Down */}
+                        <Grid item>
+                          <Typography
+                            color="primary"
+                            fontWeight="bold"
+                            variant="h6"
+                          >
+                            H
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      {/* Down */}
-                      <Grid item>
-                        <Typography
-                          color="primary"
-                          fontWeight="bold"
-                          variant="h6"
-                        >
-                          H
-                        </Typography>
+                    </Paper>
+                  </Grid>
+                  {/* Minutes */}
+                  <Grid item xs={3} sx={{ width: 1 }}>
+                    <Paper>
+                      <Grid
+                        container
+                        gap={2}
+                        alignItems="center"
+                        direction="column"
+                      >
+                        {/* Up */}
+                        <Grid item>
+                          <Typography
+                            color="primary.light"
+                            fontWeight="bold"
+                            variant="h4"
+                          >
+                            {getMinutesString(getUserQuery?.data?.lastSmoked)}
+                          </Typography>
+                        </Grid>
+                        {/* Down */}
+                        <Grid item>
+                          <Typography
+                            color="primary"
+                            fontWeight="bold"
+                            variant="h6"
+                          >
+                            M
+                          </Typography>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-                {/* Minutes */}
-                <Grid item xs={3} sx={{ width: 1 }}>
-                  <Paper>
-                    <Grid
-                      container
-                      gap={2}
-                      alignItems="center"
-                      direction="column"
-                    >
-                      {/* Up */}
-                      <Grid item>
-                        <Typography
-                          color="primary.light"
-                          fontWeight="bold"
-                          variant="h4"
-                        >
-                          {getMinutesString(getUserQuery?.data?.lastSmoked)}
-                        </Typography>
+                    </Paper>
+                  </Grid>
+                  {/* Seconds */}
+                  <Grid item xs={3} sx={{ width: 1 }}>
+                    <Paper>
+                      <Grid
+                        container
+                        gap={2}
+                        alignItems="center"
+                        direction="column"
+                      >
+                        {/* Up */}
+                        <Grid item>
+                          <Typography
+                            color="primary.light"
+                            fontWeight="bold"
+                            variant="h4"
+                          >
+                            {getSecondsString(getUserQuery?.data?.lastSmoked)}
+                          </Typography>
+                        </Grid>
+                        {/* Down */}
+                        <Grid item>
+                          <Typography
+                            color="primary"
+                            fontWeight="bold"
+                            variant="h6"
+                          >
+                            S
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      {/* Down */}
-                      <Grid item>
-                        <Typography
-                          color="primary"
-                          fontWeight="bold"
-                          variant="h6"
-                        >
-                          M
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-                {/* Seconds */}
-                <Grid item xs={3} sx={{ width: 1 }}>
-                  <Paper>
-                    <Grid
-                      container
-                      gap={2}
-                      alignItems="center"
-                      direction="column"
-                    >
-                      {/* Up */}
-                      <Grid item>
-                        <Typography
-                          color="primary.light"
-                          fontWeight="bold"
-                          variant="h4"
-                        >
-                          {getSecondsString(getUserQuery?.data?.lastSmoked)}
-                        </Typography>
-                      </Grid>
-                      {/* Down */}
-                      <Grid item>
-                        <Typography
-                          color="primary"
-                          fontWeight="bold"
-                          variant="h6"
-                        >
-                          S
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Paper>
+                    </Paper>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Card>
+          </Card>
+        </Tooltip>
       )}
     </Grid>
   );
 };
 export default Home;
-
-// {`${getDaysString(
-//   getUserQuery?.data?.lastSmoked,
-// )} / ${getHoursString(
-//   getUserQuery?.data?.lastSmoked,
-// )}:${getMinutesString(
-//   getUserQuery?.data?.lastSmoked,
-// )}.${getSecondsString(getUserQuery?.data?.lastSmoked)}`}

@@ -4,6 +4,7 @@ import {
   Typography,
   CircularProgress,
   Button,
+  Tooltip,
 } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -99,6 +100,7 @@ const ListOfPacks = ({
   };
 
   const mapToObject = (pack: Pack) => {
+    const active = pack.id === activePackId;
     return (
       <Grid
         key={pack.id}
@@ -108,32 +110,34 @@ const ListOfPacks = ({
         xs={5.5}
         sx={{ cursor: 'pointer' }}
       >
-        <Paper
-          sx={{
-            border: pack.id === activePackId ? 2 : 0,
-            borderColor: 'primary.main',
-          }}
-          onClick={() => {
-            setSelectedPackId(pack.id);
-            setSelectedPackName(pack.name);
-            setDialogOpen(true);
-          }}
-        >
-          <Grid container direction="column" alignItems="center" padding={1}>
-            {/* Main text */}
-            <Grid item>
-              <Typography color="primary" fontWeight="bold" variant="body1">
-                {pack.name}
-              </Typography>
+        <Tooltip placement="top" title={`${active ? 'Active package' : ''}`}>
+          <Paper
+            sx={{
+              border: pack.id === activePackId ? 2 : 0,
+              borderColor: 'primary.main',
+            }}
+            onClick={() => {
+              setSelectedPackId(pack.id);
+              setSelectedPackName(pack.name);
+              setDialogOpen(true);
+            }}
+          >
+            <Grid container direction="column" alignItems="center" padding={1}>
+              {/* Main text */}
+              <Grid item>
+                <Typography color="primary" fontWeight="bold" variant="body1">
+                  {pack.name}
+                </Typography>
+              </Grid>
+              {/* Secondary text */}
+              <Grid item>
+                <Typography color="primary" variant="caption">
+                  {pack.left}/{pack.size}{' '}
+                </Typography>
+              </Grid>
             </Grid>
-            {/* Secondary text */}
-            <Grid item>
-              <Typography color="primary" variant="caption">
-                {pack.left}/{pack.size}{' '}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </Tooltip>
       </Grid>
     );
   };
@@ -182,14 +186,16 @@ const ListOfPacks = ({
               setFormVisible((prev) => !prev);
             }}
           >
-            <Typography
-              color="primary"
-              padding={1.9}
-              fontWeight="bold"
-              variant="h5"
-            >
-              {formVisible ? '-' : '+'}
-            </Typography>
+            <Tooltip placement="top" title="Add new package">
+              <Typography
+                color="primary"
+                padding={1.9}
+                fontWeight="bold"
+                variant="h5"
+              >
+                {formVisible ? '-' : '+'}
+              </Typography>
+            </Tooltip>
           </Paper>
         </Grid>
       </Grid>

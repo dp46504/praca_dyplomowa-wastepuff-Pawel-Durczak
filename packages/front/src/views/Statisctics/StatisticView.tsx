@@ -167,7 +167,7 @@ const StatisticView = () => {
       >
         <Line options={options} data={data} />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} sx={{ width: 1 }}>
         <MoneyEquivalent />
       </Grid>
     </Grid>

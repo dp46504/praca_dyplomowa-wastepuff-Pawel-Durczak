@@ -9,6 +9,8 @@ import BackpackOutlinedIcon from '@mui/icons-material/BackpackOutlined';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { IconButton } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 
 const NavBar = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.token);
@@ -21,8 +23,13 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <LoginIcon color="primary" className={classes.iconStyle} />
+      <Tooltip placement="top" title="Login">
+        <IconButton>
+          <LoginIcon color="primary" className={classes.iconStyle} />
+        </IconButton>
+      </Tooltip>
     </NavLink>,
+
     <NavLink
       key="2"
       to="/register"
@@ -30,7 +37,11 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <PersonAddRoundedIcon color="primary" className={classes.iconStyle} />
+      <Tooltip placement="top" title="Register">
+        <IconButton>
+          <PersonAddRoundedIcon color="primary" className={classes.iconStyle} />
+        </IconButton>
+      </Tooltip>
     </NavLink>,
   ];
 
@@ -42,7 +53,14 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <SmokingRoomsRoundedIcon color="primary" className={classes.iconStyle} />
+      <Tooltip placement="top" title="Home">
+        <IconButton>
+          <SmokingRoomsRoundedIcon
+            color="primary"
+            className={classes.iconStyle}
+          />
+        </IconButton>
+      </Tooltip>
     </NavLink>,
 
     <NavLink
@@ -52,7 +70,11 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <BackpackOutlinedIcon color="primary" className={classes.iconStyle} />
+      <Tooltip placement="top" title="Your packs">
+        <IconButton>
+          <BackpackOutlinedIcon color="primary" className={classes.iconStyle} />
+        </IconButton>
+      </Tooltip>
     </NavLink>,
 
     <NavLink
@@ -62,7 +84,11 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <EqualizerRoundedIcon color="primary" className={classes.iconStyle} />
+      <Tooltip placement="top" title="Statistics">
+        <IconButton>
+          <EqualizerRoundedIcon color="primary" className={classes.iconStyle} />
+        </IconButton>
+      </Tooltip>
     </NavLink>,
 
     <NavLink
@@ -73,7 +99,11 @@ const NavBar = () => {
         isActive ? `${classes.active} ${classes.navItem}` : classes.navItem
       }
     >
-      <LogoutRoundedIcon color="primary" className={classes.iconStyle} />
+      <Tooltip placement="top" title="Logout">
+        <IconButton>
+          <LogoutRoundedIcon color="primary" className={classes.iconStyle} />
+        </IconButton>
+      </Tooltip>
     </NavLink>,
   ];
 
