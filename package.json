@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "npx lerna run start:dev --parallel --stream"
+    "start:dev": "npx lerna run start:dev --parallel --stream",
+    "lerna-dockerize": "lerna-dockerize"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +16,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "lerna-dockerize": "^1.0.4"
+  }
 }
