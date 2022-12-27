@@ -23,7 +23,13 @@ const validationSchema = yup.object().shape({
     .string()
     .required('Email is required')
     .email('Email field must be an email'),
-  password: yup.string().required('Password is reuired'),
+  password: yup
+    .string()
+    .required('Password is reuired')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+      'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
+    ),
 });
 
 const Login = () => {
